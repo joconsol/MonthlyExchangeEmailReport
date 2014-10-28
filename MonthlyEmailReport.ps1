@@ -1,9 +1,17 @@
 #########################################################
-#		Monthly mailbox email report					#
-#		Version: 1.0									#
-#		Created: 28/10/2014								#
-#		Creator: Nostalgiac								#
+#		Monthly mailbox email report		#
+#		Version: 1.1				#
+#		Created: 28/10/2014			#
+#		Creator: Nostalgiac			#
+#							#
+#		Required config:			#
+#		Get-MailboxStatistics -Database		#
+#		$smtpServer				#
+#		$smtpFrom				#
+#		$smtpTo					#
+#		$smtpServer				#
 #########################################################
+
 #Import Exchange 2010 Module
 Add-PSSnapIn Microsoft.Exchange.Management.PowerShell.E2010
 
@@ -20,12 +28,12 @@ $style = $style + "TD{border: 1px solid black; padding: 5px; }"
 $style = $style + "</style>"
 
 #Get Mailbox statistics
-$body = Get-MailboxStatistics -Database "Mailbox Database 1947148904" | Select DisplayName, ItemCount, TotalItemSize | Sort-Object TotalItemSize -Descending | ConvertTo-Html -Head $style | Out-String
+$body = Get-MailboxStatistics -Database "Mailbox Database 1234567890" | Select DisplayName, ItemCount, TotalItemSize | Sort-Object TotalItemSize -Descending | ConvertTo-Html -Head $style | Out-String
 
 #Email results to IT
 $smtpServer = "mail.domain.com.au"
 $smtpFrom = "exchangeserver@domain.com.au"
-$smtpTo = "user@domain.com.au"
+[string[]]$smtpTo = "user1@domain.com.au,user2@domain.com.au"
 $messageSubject = $CurrentDate + " Email Report"
 
 $message = New-Object System.Net.Mail.MailMessage $smtpfrom, $smtpto
