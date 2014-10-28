@@ -1,11 +1,10 @@
 #########################################################
 #		Monthly mailbox email report		#
-#		Version: 1.1				#
+#		Version: 1.2				#
 #		Created: 28/10/2014			#
 #		Creator: Nostalgiac			#
 #							#
 #		Required config:			#
-#		Get-MailboxStatistics -Database		#
 #		$smtpServer				#
 #		$smtpFrom				#
 #		$smtpTo					#
@@ -27,8 +26,13 @@ $style = $style + "TH{border: 1px solid black; background: #dddddd; padding: 5px
 $style = $style + "TD{border: 1px solid black; padding: 5px; }"
 $style = $style + "</style>"
 
-#Get Mailbox statistics
-$body = Get-MailboxStatistics -Database "Mailbox Database 1234567890" | Select DisplayName, ItemCount, TotalItemSize | Sort-Object TotalItemSize -Descending | ConvertTo-Html -Head $style | Out-String
+#Get list of mailbox databases
+$mbxDB = Get-MailboxDatabase
+
+#Get mailbox statistics for each database
+foreach ($database in $mbxDB) {
+        $body += Get-MailboxStatistics -Database $database | Select DisplayName, ItemCount, TotalItemSize | Sort-Object TotalItemSize -Descending | ConvertTo-Html -Head $style | Out-String
+        }
 
 #Email results to IT
 $smtpServer = "mail.domain.com.au"
